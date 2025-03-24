@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Not Found</title>
+    <style>
+        /* Modern Error Pages for Nginx */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+          --primary-color: #3879c9;
+          --primary-dark: #2d5da6;
+          --accent-color: #5a9de0;
+          --error-400-color: #4a85d6;
+          --text-color: #e8f0fe;
+          --text-secondary: #b1d0fb;
+          --background-color: #19283e;
+          --card-bg: rgba(37, 84, 160, 0.7);
+          --card-shadow: 0 10px 25px -5px rgba(55, 121, 201, 0.5), 0 10px 10px -5px rgba(55, 121, 201, 0.4);
+          --border-radius: 16px;
+          --border-color: rgba(90, 157, 224, 0.6);
+          --button-hover: #2d5da6;
+          --details-bg: rgba(25, 40, 62, 0.8);
+          --glass-blur: blur(8px);
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          background-color: var(--background-color);
+          color: var(--text-color);
+          padding: 20px;
+          line-height: 1.5;
+          width: 100%;
+          max-width: 100%;
+          margin: 0 auto;
+        }
+
+        .error-container {
+          text-align: center;
+          max-width: 800px;
+          padding: 40px;
+          background-color: var(--card-bg);
+          border-radius: var(--border-radius);
+          box-shadow: var(--card-shadow);
+          border: 1px solid var(--border-color);
+          animation: fadeIn 0.3s ease-out;
+          position: relative;
+          overflow: hidden;
+          width: 100%;
+          box-sizing: border-box;
+          backdrop-filter: var(--glass-blur);
+          -webkit-backdrop-filter: var(--glass-blur);
+        }
+
+        .error-code {
+          font-size: 120px;
+          font-weight: 700;
+          margin-bottom: 24px;
+          line-height: 1;
+          background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          text-shadow: 0 0 10px rgba(64, 156, 255, 0.8),
+                       0 0 20px rgba(64, 156, 255, 0.6),
+                       0 0 30px rgba(64, 156, 255, 0.4),
+                       0 0 40px rgba(64, 156, 255, 0.2);
+          filter: brightness(1.3);
+        }
+
+        .error-400 .error-code {
+          background: linear-gradient(135deg, var(--error-400-color) 0%, var(--primary-color) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        .error-title {
+          font-size: 36px;
+          font-weight: 600;
+          margin-bottom: 16px;
+          color: var(--text-color);
+        }
+
+        .error-message {
+          font-size: 18px;
+          line-height: 1.6;
+          margin-bottom: 32px;
+          color: var(--text-secondary);
+          max-width: 600px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .error-details {
+          font-size: 16px;
+          line-height: 1.6;
+          margin-bottom: 36px;
+          padding: 24px;
+          background-color: var(--details-bg);
+          border-radius: 12px;
+          text-align: left;
+          color: var(--text-secondary);
+          border: 1px solid var(--border-color);
+        }
+
+        .back-button {
+          display: inline-block;
+          padding: 14px 28px;
+          background-color: var(--primary-color);
+          color: white;
+          text-decoration: none;
+          border-radius: 10px;
+          font-weight: 500;
+          transition: all 0.2s ease;
+          box-shadow: 0 4px 6px -1px rgba(66, 133, 244, 0.4), 0 2px 4px -1px rgba(66, 133, 244, 0.3);
+          border: 1px solid var(--border-color);
+        }
+
+        .back-button:hover {
+          background-color: var(--button-hover);
+          transform: translateY(-2px);
+          box-shadow: 0 10px 15px -3px rgba(66, 133, 244, 0.5), 0 4px 6px -2px rgba(66, 133, 244, 0.4);
+          border-color: var(--accent-color);
+        }
+
+        .error-400 .back-button {
+          background-color: var(--error-400-color);
+          box-shadow: 0 4px 6px -1px rgba(92, 156, 230, 0.4), 0 2px 4px -1px rgba(92, 156, 230, 0.3);
+        }
+
+        .error-400 .back-button:hover {
+          background-color: var(--primary-color);
+          box-shadow: 0 10px 15px -3px rgba(92, 156, 230, 0.5), 0 4px 6px -2px rgba(92, 156, 230, 0.4);
+        }
+
+        .background-shape {
+          position: absolute;
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+          border-radius: 50%;
+          z-index: 0;
+        }
+
+        .shape1 {
+          width: 300px;
+          height: 300px;
+          top: -150px;
+          right: -150px;
+        }
+
+        .shape2 {
+          width: 200px;
+          height: 200px;
+          bottom: -100px;
+          left: -100px;
+        }
+
+        .error-content {
+          position: relative;
+          z-index: 1;
+        }
+
+        .maintenance-icon {
+          display: flex;
+          justify-content: center;
+          margin-bottom: 20px;
+        }
+
+        .emoji-icon {
+          font-size: 120px;
+          line-height: 1;
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0.8;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @media (max-width: 640px) {
+          .error-container {
+            padding: 24px;
+          }
+          
+          .error-code {
+            font-size: 90px;
+          }
+          
+          .error-title {
+            font-size: 24px;
+          }
+          
+          .error-message {
+            font-size: 16px;
+          }
+          
+          .error-details {
+            font-size: 14px;
+            padding: 16px;
+          }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container error-400">
+        <div class="background-shape shape1"></div>
+        <div class="background-shape shape2"></div>
+        <div class="error-content">
+            <div class="maintenance-icon">
+                <span class="emoji-icon">🤷</span>
+            </div>
+            <div class="error-code">404</div>
+            <h1 class="error-title">Page Not Found</h1>
+            <p class="error-message">
+                The page you're looking for doesn't exist or has been moved.
+            </p>
+            <div class="error-details">
+                The server cannot find the requested resource. The URL may be mistyped or the page may have been moved or deleted. Check the URL and try again, or navigate back to the homepage.
+            </div>
+            <a href="/" class="back-button">Back to Homepage</a>
+        </div>
+    </div>
+</body>
+</html>

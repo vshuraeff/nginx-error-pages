@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Maintenance</title>
+    <style>
+        /* Modern Error Pages for Nginx - Only necessary styles */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+          --primary-color: #3879c9;
+          --primary-dark: #2d5da6;
+          --accent-color: #5a9de0;
+          --text-color: #e8f0fe;
+          --text-secondary: #b1d0fb;
+          --background-color: #19283e;
+          --card-bg: rgba(37, 84, 160, 0.7);
+          --card-shadow: 0 10px 25px -5px rgba(55, 121, 201, 0.5), 0 10px 10px -5px rgba(55, 121, 201, 0.4);
+          --border-radius: 16px;
+          --border-color: rgba(90, 157, 224, 0.6);
+          --button-hover: #2d5da6;
+          --details-bg: rgba(25, 40, 62, 0.8);
+          --glass-blur: blur(8px);
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          background-color: var(--background-color);
+          color: var(--text-color);
+          padding: 20px;
+          line-height: 1.5;
+          width: 100%;
+          max-width: 100%;
+          margin: 0 auto;
+        }
+
+        .maintenance-container {
+          text-align: center;
+          max-width: 800px;
+          padding: 40px;
+          background-color: var(--card-bg);
+          border-radius: var(--border-radius);
+          box-shadow: var(--card-shadow);
+          border: 1px solid var(--border-color);
+          animation: fadeIn 0.3s ease-out;
+          position: relative;
+          overflow: hidden;
+          backdrop-filter: var(--glass-blur);
+          -webkit-backdrop-filter: var(--glass-blur);
+        }
+
+        .maintenance-title {
+          font-size: 36px;
+          font-weight: 700;
+          margin-bottom: 24px;
+          color: var(--text-color);
+        }
+
+        .maintenance-message {
+          font-size: 18px;
+          line-height: 1.6;
+          margin-bottom: 32px;
+          color: var(--text-secondary);
+        }
+
+        .error-message {
+          font-size: 18px;
+          line-height: 1.6;
+          margin-bottom: 32px;
+          color: var(--text-secondary);
+          max-width: 600px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .back-button {
+          display: inline-block;
+          padding: 14px 28px;
+          background-color: var(--primary-color);
+          color: white;
+          text-decoration: none;
+          border-radius: 10px;
+          font-weight: 500;
+          transition: all 0.2s ease;
+          box-shadow: 0 4px 6px -1px rgba(66, 133, 244, 0.4), 0 2px 4px -1px rgba(66, 133, 244, 0.3);
+          border: 1px solid var(--border-color);
+        }
+
+        .back-button:hover {
+          background-color: var(--button-hover);
+          transform: translateY(-2px);
+          box-shadow: 0 10px 15px -3px rgba(66, 133, 244, 0.5), 0 4px 6px -2px rgba(66, 133, 244, 0.4);
+          border-color: var(--accent-color);
+        }
+
+        .background-shape {
+          position: absolute;
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+          border-radius: 50%;
+          z-index: 0;
+        }
+
+        .shape1 {
+          width: 300px;
+          height: 300px;
+          top: -150px;
+          right: -150px;
+        }
+
+        .shape2 {
+          width: 200px;
+          height: 200px;
+          bottom: -100px;
+          left: -100px;
+        }
+
+        .error-content {
+          position: relative;
+          z-index: 1;
+        }
+
+        .countdown {
+          display: flex;
+          justify-content: center;
+          margin: 40px 0;
+          gap: 20px;
+        }
+
+        .countdown-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          min-width: 70px;
+        }
+
+        .countdown-value {
+          font-size: 32px;
+          font-weight: 700;
+          color: var(--text-color);
+        }
+
+        .countdown-label {
+          font-size: 14px;
+          color: var(--text-secondary);
+          margin-top: 5px;
+        }
+
+        .maintenance-icon {
+          display: flex;
+          justify-content: center;
+          margin-bottom: 20px;
+        }
+
+        .emoji-icon {
+          font-size: 120px;
+          line-height: 1;
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0.8;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @media (max-width: 640px) {
+          .maintenance-container {
+            padding: 24px;
+          }
+          
+          .maintenance-title {
+            font-size: 24px;
+          }
+          
+          .maintenance-message, .error-message {
+            font-size: 16px;
+          }
+          
+          .countdown {
+            gap: 10px;
+          }
+          
+          .countdown-item {
+            min-width: 60px;
+          }
+          
+          .countdown-value {
+            font-size: 28px;
+          }
+        }
+    </style>
+</head>
+<body>
+    <div class="maintenance-container">
+        <div class="background-shape shape1"></div>
+        <div class="background-shape shape2"></div>
+        <div class="error-content">
+            <div class="maintenance-icon">
+                <span class="emoji-icon">🧰</span>
+            </div>
+            <h1 class="maintenance-title">We're Currently Under Maintenance</h1>
+            <p class="maintenance-message">
+                Our team is performing scheduled maintenance to improve your experience.
+                We'll be back online shortly. Thank you for your patience.
+            </p>
+            
+            <div class="countdown">
+                <div class="countdown-item">
+                    <div class="countdown-value" id="hours">00</div>
+                    <div class="countdown-label">Hours</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="minutes">00</div>
+                    <div class="countdown-label">Minutes</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="seconds">00</div>
+                    <div class="countdown-label">Seconds</div>
+                </div>
+            </div>
+            
+            <p class="error-message">
+                If you need immediate assistance, please contact our support team.
+            </p>
+            
+            <a href="javascript:void(0);" onclick="location.reload();" class="back-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="reload-icon" style="margin-right: 5px; vertical-align: middle;">
+                    <path d="M23 4v6h-6"></path>
+                    <path d="M1 20v-6h6"></path>
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"></path>
+                    <path d="M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                </svg>
+                Reload Page
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        // Set the countdown date (1 hour from now by default)
+        const countdownDate = new Date();
+        countdownDate.setHours(countdownDate.getHours() + 1);
+        
+        // Update the countdown every second
+        const countdown = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = countdownDate - now;
+            
+            // Calculate hours, minutes and seconds
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            // Display the result
+            document.getElementById("hours").innerHTML = hours.toString().padStart(2, "0");
+            document.getElementById("minutes").innerHTML = minutes.toString().padStart(2, "0");
+            document.getElementById("seconds").innerHTML = seconds.toString().padStart(2, "0");
+            
+            // If the countdown is finished, show a message
+            if (distance < 0) {
+                clearInterval(countdown);
+                document.getElementById("hours").innerHTML = "00";
+                document.getElementById("minutes").innerHTML = "00";
+                document.getElementById("seconds").innerHTML = "00";
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

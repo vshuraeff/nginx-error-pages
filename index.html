@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTP Error Pages Catalog</title>
+    <style>
+        /* Modern Error Pages for Nginx */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+          /* Calmer blue color palette */
+          --primary-color: #3879c9; /* Calmer Google Blue */
+          --primary-dark: #2d5da6; /* Calmer Dark Blue */
+          --accent-color: #5a9de0; /* Calmer Light Blue for accents */
+          --error-400-color: #4a85d6; /* Calmer Blue for 4xx errors */
+          --error-500-color: #3470cc; /* Calmer Vivid Blue for 5xx errors */
+          --text-color: #e8f0fe; /* Bright Blue-White for text */
+          --text-secondary: #b1d0fb; /* Light Blue for secondary text */
+          --background-color: #19283e; /* Deep Calmer Royal Blue for background */
+          --card-bg: rgba(37, 84, 160, 0.7); /* Semi-transparent Vibrant Blue */
+          --card-shadow: 0 10px 25px -5px rgba(55, 121, 201, 0.5), 0 10px 10px -5px rgba(55, 121, 201, 0.4);
+          --border-radius: 16px;
+          --border-color: rgba(90, 157, 224, 0.6); /* Semi-transparent Light Blue */
+          --button-hover: #2d5da6; /* Darker Google Blue for hover */
+          --details-bg: rgba(25, 40, 62, 0.8); /* Semi-transparent Deep Blue */
+          --input-bg: rgba(25, 40, 62, 0.5); /* Same as background color, semi-transparent */
+          --hover-color: rgba(55, 121, 201, 0.7); /* Semi-transparent hover */
+          --glass-blur: blur(8px);
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          background-color: var(--background-color);
+          color: var(--text-color);
+          padding: 20px;
+          line-height: 1.5;
+          width: 100%;
+          max-width: 100%;
+          margin: 0 auto;
+        }
+
+        /* Catalog Page Styles */
+        .catalog-container {
+          text-align: center;
+          max-width: 1200px;
+          padding: 40px;
+          background-color: var(--card-bg);
+          border-radius: var(--border-radius);
+          box-shadow: var(--card-shadow);
+          border: 1px solid var(--border-color);
+          width: 100%;
+          box-sizing: border-box;
+          backdrop-filter: var(--glass-blur);
+          -webkit-backdrop-filter: var(--glass-blur);
+        }
+
+        .catalog-title {
+          font-size: 42px;
+          margin-bottom: 24px;
+          background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          color: transparent;
+          font-weight: 700;
+        }
+
+        .catalog-description {
+          font-size: 18px;
+          line-height: 1.6;
+          margin-bottom: 30px;
+          color: var(--text-secondary);
+          max-width: 700px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .error-type-header {
+          font-size: 24px;
+          font-weight: 600;
+          margin: 40px 0 16px;
+          text-align: left;
+          color: var(--text-color);
+          border-bottom: 1px solid var(--border-color);
+          padding-bottom: 8px;
+        }
+
+        .search-container {
+          margin-bottom: 30px;
+          width: 100%;
+          max-width: 500px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .search-input {
+          width: 100%;
+          padding: 14px 20px;
+          border-radius: 8px;
+          border: 1px solid var(--border-color);
+          background-color: var(--background-color);
+          color: var(--text-color);
+          font-size: 16px;
+          transition: all 0.2s ease;
+          backdrop-filter: var(--glass-blur);
+          -webkit-backdrop-filter: var(--glass-blur);
+        }
+
+        .search-input:focus {
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.3);
+        }
+
+        .search-input::placeholder {
+          color: var(--text-secondary);
+          opacity: 0.7;
+        }
+
+        .error-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 24px;
+          margin-top: 20px;
+        }
+
+        .error-card {
+          border: 1px solid var(--border-color);
+          border-radius: 14px;
+          padding: 24px;
+          transition: all 0.3s ease;
+          background-color: var(--card-bg);
+          text-align: left;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .error-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 25px -5px rgba(58, 123, 213, 0.6), 0 10px 10px -5px rgba(58, 123, 213, 0.4);
+          background-color: var(--hover-color);
+          border-color: var(--accent-color);
+        }
+
+        .error-card-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 16px;
+          padding-bottom: 16px;
+          border-bottom: 1px solid var(--border-color);
+        }
+
+        .error-card-code {
+          font-size: 38px;
+          font-weight: bold;
+          text-shadow: 0 0 8px rgba(64, 156, 255, 0.7),
+                       0 0 15px rgba(64, 156, 255, 0.5),
+                       0 0 20px rgba(64, 156, 255, 0.3);
+          filter: brightness(1.2);
+        }
+
+        .error-card-title {
+          font-size: 18px;
+          font-weight: 600;
+          color: var(--text-color);
+        }
+
+        .error-card-description {
+          font-size: 15px;
+          color: var(--text-secondary);
+          margin-bottom: 20px;
+          line-height: 1.6;
+          flex-grow: 1;
+        }
+
+        .error-card-emoji {
+          font-size: 36px;
+          margin-bottom: 15px;
+          display: block;
+          opacity: 0.9;
+        }
+
+        .error-card-link {
+          display: inline-block;
+          padding: 10px 18px;
+          background-color: var(--primary-color);
+          color: white;
+          text-decoration: none;
+          border-radius: 8px;
+          font-size: 14px;
+          font-weight: 500;
+          transition: all 0.2s ease;
+          box-shadow: 0 2px 4px rgba(79, 70, 229, 0.1);
+          text-align: center;
+        }
+
+        .error-card-link:hover {
+          background-color: var(--button-hover);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(79, 70, 229, 0.2);
+        }
+
+        .error-400-code {
+          background: linear-gradient(135deg, var(--error-400-color) 0%, var(--primary-color) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          color: transparent;
+        }
+
+        .error-500-code {
+          background: linear-gradient(135deg, var(--error-500-color) 0%, var(--primary-dark) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          color: transparent;
+        }
+
+        .error-400-card .error-card-link {
+          background-color: var(--error-400-color);
+          box-shadow: 0 2px 4px rgba(92, 156, 230, 0.3);
+        }
+
+        .error-400-card .error-card-link:hover {
+          background-color: var(--primary-color);
+          box-shadow: 0 4px 8px rgba(92, 156, 230, 0.4);
+        }
+
+        .error-500-card .error-card-link {
+          background-color: var(--error-500-color);
+          box-shadow: 0 2px 4px rgba(59, 120, 231, 0.3);
+        }
+
+        .error-500-card .error-card-link:hover {
+          background-color: var(--primary-dark);
+          box-shadow: 0 4px 8px rgba(59, 120, 231, 0.4);
+        }
+
+        .category-filter {
+          display: flex;
+          justify-content: center;
+          margin-bottom: 30px;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+
+        .filter-button {
+          padding: 8px 16px;
+          background-color: var(--details-bg);
+          border: 1px solid var(--border-color);
+          color: var(--text-secondary);
+          border-radius: 6px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          font-size: 14px;
+        }
+
+        .filter-button:hover, .filter-button.active {
+          background-color: var(--primary-color);
+          color: white;
+        }
+
+        @media (max-width: 768px) {
+          .error-grid {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          }
+          
+          .catalog-container {
+            padding: 24px;
+          }
+          
+          .catalog-title {
+            font-size: 32px;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .catalog-container {
+            padding: 16px;
+          }
+
+          .catalog-title {
+            font-size: 28px;
+          }
+
+          .catalog-description {
+            font-size: 14px;
+          }
+
+          .error-grid {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          }
+        }
+
+        @media (min-width: 1920px) {
+          .catalog-container {
+            max-width: 1800px;
+            padding: 60px;
+          }
+
+          .catalog-title {
+            font-size: 48px;
+          }
+
+          .catalog-description {
+            font-size: 20px;
+          }
+
+          .error-grid {
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+          }
+        }
+    </style>
+</head>
+<body>
+    <div class="catalog-container">
+        <h1 class="catalog-title" style="color: var(--text-color);">HTTP Error Pages Catalog</h1>
+        <p class="catalog-description" style="color: var(--text-secondary);">
+            A collection of modern, responsive error pages for web servers. 
+            These pages provide clear information about HTTP errors to improve user experience.
+        </p>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search by error code or description...">
+        </div>
+        
+        <div class="category-filter">
+            <button class="filter-button active" data-filter="all">All Errors</button>
+            <button class="filter-button" data-filter="400">4xx Client Errors</button>
+            <button class="filter-button" data-filter="500">5xx Server Errors</button>
+            <button class="filter-button" data-filter="other">Other Pages</button>
+        </div>
+        
+        <h2 class="error-type-header">Client Error Responses (400-499)</h2>
+        <div class="error-grid" id="client-errors">
+            <!-- 400 Series Errors -->
+            <div class="error-card error-400-card" data-error="400 bad request invalid syntax">
+                <span class="error-card-emoji">⚠️</span>
+                <div class="error-card-header">
+                    <span class="error-card-code error-400-code">400</span>
+                    <span class="error-card-title">Bad Request</span>
+                </div>
+                <p class="error-card-description">
+                    The server cannot process the request due to a client error. 
+                    Invalid syntax or request format.
+                </p>
+                <a href="400.html" class="error-card-link">View Page</a>
+            </div>
+            
+            <div class="error-card error-400-card" data-error="401 unauthorized authentication required">
+                <span class="error-card-emoji">🔑</span>
+                <div class="error-card-header">
+                    <span class="error-card-code error-400-code">401</span>
+                    <span class="error-card-title">Unauthorized</span>
+                </div>
+                <p class="error-card-description">
+                    Authentication is required to access this resource.
+                    Credentials are missing or invalid.
+                </p>
+                <a href="401.html" class="error-card-link">View Page</a>
+            </div>
+            
+            <div class="error-card error-400-card" data-error="403 forbidden no permission">
+                <span class="error-card-emoji">🚷</span>
+                <div class="error-card-header">
+                    <span class="error-card-code error-400-code">403</span>
+                    <span class="error-card-title">Forbidden</span>
+                </div>
+                <p class="error-card-description">
+                    You don't have permission to access this resource.
+                    Access is permanently forbidden.
+                </p>
+                <a href="403.html" class="error-card-link">View Page</a>
+            </div>
+            
+            <div class="error-card error-400-card" data-error="404 not found missing page">
+                <span class="error-card-emoji">🤷</span>
+                <div class="error-card-header">
+                    <span class="error-card-code error-400-code">404</span>
+                    <span class="error-card-title">Not Found</span>
+                </div>
+                <p class="error-card-description">
+                    The page you're looking for doesn't exist or has been moved.
+                    URL may be mistyped or the page deleted.
+                </p>
+                <a href="404.html" class="error-card-link">View Page</a>
+            </div>
+            
+            <div class="error-card error-400-card" data-error="405 method not allowed">
+                <span class="error-card-emoji">🙅</span>
+                <div class="error-card-header">
+                    <span class="error-card-code error-400-code">405</span>
+                    <span class="error-card-title">Method Not Allowed</span>
+                </div>
+                <p class="error-card-description">
+                    The request method is not supported by the server.
+                    Used when method is not allowed for requested URL.
+                </p>
+                <a href="405.html" class="error-card-link">View Page</a>
+            </div>
+            
+            <div class="error-card error-400-card" data-error="408 request timeout slow connection">
+                <span class="error-card-emoji">⏲️</span>
+                <div class="error-card-header">
+                    <span class="error-card-code error-400-code">408</span>
+                    <span class="error-card-title">Request Timeout</span>
+                </div>
+                <p class="error-card-description">
+                    The server timed out waiting for the request.
+                    Client did not produce a request within the time server was prepared to wait.
+                </p>
+                <a href="408.html" class="error-card-link">View Page</a>
+            </div>
+            
+            <div class="error-card error-400-card" data-error="418 teapot i'm a teapot coffee">
+                <span class="error-card-emoji">🫖</span>
+                <div class="error-card-header">
+                    <span class="error-card-code error-400-code">418</span>
+                    <span class="error-card-title">I'm a Teapot</span>
+                </div>
+                <p class="error-card-description">
+                    The server refuses to brew coffee because it is a teapot.
+                    This code is a reference to a 1998 April Fools' joke.
+                </p>
+                <a href="418.html" class="error-card-link">View Page</a>
+            </div>
+            
+            <div class="error-card error-400-card" data-error="429 too many requests rate limiting">
+                <span class="error-card-emoji">🦥</span>
+                <div class="error-card-header">
+                    <span class="error-card-code error-400-code">429</span>
+                    <span class="error-card-title">Too Many Requests</span>
+                </div>
+                <p class="error-card-description">
+                    You have sent too many requests in a given amount of time.
+                    Rate limiting has been applied to your IP address.
+                </p>
+                <a href="429.html" class="error-card-link">View Page</a>
+            </div>
+            
+            <div class="error-card error-400-card" data-error="451 unavailable legal reasons censored">
+                <span class="error-card-emoji">🗽</span>
+                <div class="error-card-header">
+                    <span class="error-card-code error-400-code">451</span>
+                    <span class="error-card-title" style="text-align: right;">Unavailable For Legal Reasons</span>
+                </div>
+                <p class="error-card-description">
+                    The resource is unavailable due to legal reasons.
+                    Often used for censorship or DMCA takedown requests.
+                </p>
+                <a href="451.html" class="error-card-link">View Page</a>
+            </div>
+        </div>
+        
+        <h2 class="error-type-header">Server Error Responses (500-599)</h2>
+        <div class="error-grid" id="server-errors">
+            <!-- 500 Series Errors -->
+            <div class="error-card error-500-card" data-error="500 internal server error">
+                <span class="error-card-emoji">💥</span>
+                <div class="error-card-header">
+                    <span class="error-card-code error-500-code">500</span>
+                    <span class="error-card-title">Internal Server Error</span>
+                </div>
+                <p class="error-card-description">
+                    Something went wrong on our end. We're working to fix it.
+                    A generic server error response.
+                </p>
+                <a href="500.html" class="error-card-link">View Page</a>
+            </div>
+            
+            <div class="error-card error-500-card" data-error="501 not implemented unsupported">
+                <span class="error-card-emoji">🧮</span>
+                <div class="error-card-header">
+                    <span class="error-card-code error-500-code">501</span>
+                    <span class="error-card-title">Not Implemented</span>
+                </div>
+                <p class="error-card-description">
+                    The server does not support the functionality required.
+                    The server either does not recognize the request method or lacks ability to fulfill.
+                </p>
+                <a href="501.html" class="error-card-link">View Page</a>
+            </div>
+            
+            <div class="error-card error-500-card" data-error="502 bad gateway invalid response">
+                <span class="error-card-emoji">🥅</span>
+                <div class="error-card-header">
+                    <span class="error-card-code error-500-code">502</span>
+                    <span class="error-card-title">Bad Gateway</span>
+                </div>
+                <p class="error-card-description">
+                    The server received an invalid response from an upstream server.
+                    Service dependency is down or unreachable.
+                </p>
+                <a href="502.html" class="error-card-link">View Page</a>
+            </div>
+            
+            <div class="error-card error-500-card" data-error="503 service unavailable maintenance">
+                <span class="error-card-emoji">🩼</span>
+                <div class="error-card-header">
+                    <span class="error-card-code error-500-code">503</span>
+                    <span class="error-card-title">Service Unavailable</span>
+                </div>
+                <p class="error-card-description">
+                    The server is temporarily unable to handle your request.
+                    Due to overload or scheduled maintenance.
+                </p>
+                <a href="503.html" class="error-card-link">View Page</a>
+            </div>
+            
+            <div class="error-card error-500-card" data-error="504 gateway timeout slow response">
+                <span class="error-card-emoji">⏳</span>
+                <div class="error-card-header">
+                    <span class="error-card-code error-500-code">504</span>
+                    <span class="error-card-title">Gateway Timeout</span>
+                </div>
+                <p class="error-card-description">
+                    The server didn't receive a timely response from an upstream server.
+                    Service dependency is slow or experiencing high latency.
+                </p>
+                <a href="504.html" class="error-card-link">View Page</a>
+            </div>
+            
+            <div class="error-card error-500-card" data-error="505 http version not supported">
+                <span class="error-card-emoji">📟</span>
+                <div class="error-card-header">
+                    <span class="error-card-code error-500-code">505</span>
+                    <span class="error-card-title" style="text-align: right;">HTTP Version Not Supported</span>
+                </div>
+                <p class="error-card-description">
+                    The HTTP version used in the request is not supported by the server.
+                    Server doesn't support the HTTP protocol version used in the request.
+                </p>
+                <a href="505.html" class="error-card-link">View Page</a>
+            </div>
+        </div>
+        
+        <h2 class="error-type-header">Other Pages</h2>
+        <div class="error-grid" id="other-pages">
+            <div class="error-card" data-error="maintenance downtime scheduled update">
+                <span class="error-card-emoji">🧰</span>
+                <div class="error-card-header">
+                    <span class="error-card-code" style="background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent;">⚙️</span>
+                    <span class="error-card-title">Maintenance Page</span>
+                </div>
+                <p class="error-card-description">
+                    A customizable maintenance page for scheduled downtime. 
+                    Informs users when the server will be back online.
+                </p>
+                <a href="maintenance.html" class="error-card-link" style="background-color: #4f46e5;">View Page</a>
+            </div>
+            
+            <div class="error-card" data-error="under construction building development work in progress">
+                <span class="error-card-emoji">🏗️</span>
+                <div class="error-card-header">
+                    <span class="error-card-code" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; color: transparent;">🚧</span>
+                    <span class="error-card-title">Under Construction</span>
+                </div>
+                <p class="error-card-description">
+                    A page indicating that a section of the website is being built.
+                    Features caution tape styling and construction theme.
+                </p>
+                <a href="underconstruction.html" class="error-card-link" style="background-color: #f59e0b;">View Page</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const allCards = document.querySelectorAll('.error-card');
+        
+        searchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            
+            allCards.forEach(card => {
+                const searchText = card.dataset.error;
+                if (searchText.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+        
+        // Filter functionality
+        const filterButtons = document.querySelectorAll('.filter-button');
+        const clientErrors = document.getElementById('client-errors');
+        const serverErrors = document.getElementById('server-errors');
+        const otherPages = document.getElementById('other-pages');
+        const errorHeaders = document.querySelectorAll('.error-type-header');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                const filter = this.dataset.filter;
+                
+                // Show/hide sections based on filter
+                if (filter === 'all') {
+                    clientErrors.style.display = 'grid';
+                    serverErrors.style.display = 'grid';
+                    otherPages.style.display = 'grid';
+                    errorHeaders.forEach(header => header.style.display = 'block');
+                } else if (filter === '400') {
+                    clientErrors.style.display = 'grid';
+                    serverErrors.style.display = 'none';
+                    otherPages.style.display = 'none';
+                    errorHeaders[0].style.display = 'block';
+                    errorHeaders[1].style.display = 'none';
+                    errorHeaders[2].style.display = 'none';
+                } else if (filter === '500') {
+                    clientErrors.style.display = 'none';
+                    serverErrors.style.display = 'grid';
+                    otherPages.style.display = 'none';
+                    errorHeaders[0].style.display = 'none';
+                    errorHeaders[1].style.display = 'block';
+                    errorHeaders[2].style.display = 'none';
+                } else if (filter === 'other') {
+                    clientErrors.style.display = 'none';
+                    serverErrors.style.display = 'none';
+                    otherPages.style.display = 'grid';
+                    errorHeaders[0].style.display = 'none';
+                    errorHeaders[1].style.display = 'none';
+                    errorHeaders[2].style.display = 'block';
+                }
+                
+                // Reset search
+                searchInput.value = '';
+                allCards.forEach(card => {
+                    card.style.display = 'flex';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

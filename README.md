@@ -67,7 +67,7 @@ error_page 505 /error_pages/505.html;
 # Location for error pages
 location ^~ /error_pages/ {
     internal;
-    root /usr/share/nginx/html;
+    alias /usr/share/nginx/html/error_pages/;
     try_files $uri =404;
 }
 

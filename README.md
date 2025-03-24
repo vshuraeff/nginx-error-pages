@@ -2,6 +2,10 @@
 
 This repository contains a collection of modern, responsive, and visually appealing error pages for Nginx servers. These pages are designed to provide clear and user-friendly error messages for various HTTP status codes, improving the user experience when encountering server errors.
 
+<img width="1173" alt="image" src="https://github.com/user-attachments/assets/dc083172-2b59-4c38-9dd0-42ab09f84cbc" />
+<img width="1173" alt="image" src="https://github.com/user-attachments/assets/781c9eb6-8404-44e7-977d-3cfe26c1317f" />
+
+
 ## Features
 
 - **Responsive Design**: Pages are fully responsive and adapt to both mobile and desktop screens, including 5K displays.
@@ -9,6 +13,7 @@ This repository contains a collection of modern, responsive, and visually appeal
 - **Customizable**: Easily modify the styles and content to match your branding.
 - **Comprehensive Coverage**: Includes error pages for common HTTP status codes (e.g., 400, 404, 500) and special cases like 418 (I'm a Teapot) and 451 (Unavailable for Legal Reasons).
 - **Maintenance Page**: A dedicated maintenance page for scheduled downtime.
+<img width="1173" alt="image" src="https://github.com/user-attachments/assets/e84fe151-b321-49b6-915a-44608cb786b6" />
 
 ## Included Files
 
@@ -98,6 +103,9 @@ Trigger different HTTP errors (e.g., by accessing non-existent pages) to verify 
 - **Modify Content**: Edit the HTML files to customize the error messages or add additional information.
 - **Change Styles**: Update the styles within each HTML file to match your website's branding.
 - **Add New Pages**: Create additional error pages as needed and update the Nginx configuration to include them.
+
+<img width="1173" alt="image" src="https://github.com/user-attachments/assets/5f54bdf2-1bec-40d2-b78d-977834b7f3a8" />
+
 
 ## Benefits of Self-Contained Pages
 

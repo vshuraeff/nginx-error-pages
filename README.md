@@ -69,6 +69,9 @@ error_page 505 /error_pages/505.html;
 # Uncomment this line and provide full path to file
 # index underconstruction.html;
 
+# Enable error page interception for proxy passthrough
+proxy_intercept_errors on;
+
 # Location for error pages
 location ^~ /error_pages/ {
     internal;
@@ -76,6 +79,12 @@ location ^~ /error_pages/ {
     try_files $uri =404;
 }
 
+```
+
+OR include the provided `error_pages.conf` file in your Nginx configuration:
+
+```nginx
+include /path/to/error_pages.conf;
 ```
 
 Make sure to update the paths to match the location where you copied the HTML files.
